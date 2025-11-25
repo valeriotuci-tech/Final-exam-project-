@@ -9,6 +9,6 @@ Nicole Tran Minh Thu.
 
 We are going to implementing the Track A 
 
-Link to Vercel: 
+Link to Vercel: https://r1-beige.vercel.app/
 
 Link to Railway: 
