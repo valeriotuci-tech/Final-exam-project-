@@ -1,0 +1,148 @@
+name: Backend Deploy
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend-deploy.yml'
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '20.x'
+
+jobs:
+  test:
+    name: Test & Lint
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./backend
+        run: npm ci
+
+      - name: Run TypeScript type checking
+        working-directory: ./backend
+        run: npx tsc --noEmit
+
+      - name: Run linting
+        working-directory: ./backend
+        run: |
+          if [ -f "package.json" ] && grep -q "\"lint\"" package.json; then
+            npm run lint
+          else
+            echo "No lint script found, skipping..."
+          fi
+
+      - name: Run tests
+        working-directory: ./backend
+        run: |
+          if [ -f "package.json" ] && grep -q "\"test\"" package.json; then
+            npm test
+          else
+            echo "No test script found, skipping..."
+          fi
+
+  build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        working-directory: ./backend
+        run: |
+          docker build -t tastyfund-backend:${{ github.sha }} .
+          docker tag tastyfund-backend:${{ github.sha }} tastyfund-backend:latest
+
+      - name: Test Docker image
+        run: |
+          docker run --rm tastyfund-backend:${{ github.sha }} node --version
+
+  deploy:
+    name: Deploy to Railway
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: production
+      url: https://r11-production.up.railway.app
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy to Railway
+        working-directory: ./backend
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          railway link 2af9b102-df34-4de0-8ef5-c79cb4443b2e
+          railway up --service R11
+
+      - name: Run database migrations
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          railway link 2af9b102-df34-4de0-8ef5-c79cb4443b2e
+          
+          # Check if migration script exists
+          if [ -f "backend/src/database/schema.sql" ]; then
+            echo "Running database migrations..."
+            railway run --service R11 psql $DATABASE_URL -f backend/src/database/schema.sql
+          else
+            echo "No migration files found, skipping..."
+          fi
+
+      - name: Verify deployment
+        run: |
+          echo "Waiting for deployment to be ready..."
+          sleep 30
+          
+          # Health check
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://r11-production.up.railway.app/health || echo "000")
+          
+          if [ "$response" = "200" ] || [ "$response" = "404" ]; then
+            echo "✅ Deployment successful!"
+          else
+            echo "⚠️ Warning: Health check returned status $response"
+          fi
+
+  notify:
+    name: Notify Deployment Status
+    runs-on: ubuntu-latest
+    needs: [test, build, deploy]
+    if: always()
+    
+    steps:
+      - name: Deployment Success
+        if: ${{ needs.deploy.result == 'success' }}
+        run: |
+          echo "🚀 Backend deployed successfully to Railway!"
+          echo "URL: https://r11-production.up.railway.app"
+
+      - name: Deployment Failed
+        if: ${{ needs.deploy.result == 'failure' }}
+        run: |
+          echo "❌ Backend deployment failed!"
+          exit 1

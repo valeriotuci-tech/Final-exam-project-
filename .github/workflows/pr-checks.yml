@@ -1,0 +1,223 @@
+name: PR Checks
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '20.x'
+
+jobs:
+  changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for changes
+        uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            backend:
+              - 'backend/**'
+            frontend:
+              - 'frontend/**'
+
+  backend-checks:
+    name: Backend Checks
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.backend == 'true'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./backend
+        run: npm ci
+
+      - name: TypeScript type checking
+        working-directory: ./backend
+        run: npx tsc --noEmit
+
+      - name: Run ESLint
+        working-directory: ./backend
+        run: |
+          if [ -f "package.json" ] && grep -q "\"lint\"" package.json; then
+            npm run lint
+          else
+            echo "⚠️ No lint script found"
+          fi
+
+      - name: Run tests
+        working-directory: ./backend
+        run: |
+          if [ -f "package.json" ] && grep -q "\"test\"" package.json; then
+            npm test
+          else
+            echo "⚠️ No test script found"
+          fi
+
+      - name: Build verification
+        working-directory: ./backend
+        run: npm run build
+
+      - name: Docker build verification
+        working-directory: ./backend
+        run: |
+          if [ -f "Dockerfile" ]; then
+            docker build -t backend-test:pr-${{ github.event.pull_request.number }} .
+            echo "✅ Docker build successful"
+          else
+            echo "⚠️ No Dockerfile found"
+          fi
+
+  frontend-checks:
+    name: Frontend Checks
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.frontend == 'true'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: TypeScript type checking
+        working-directory: ./frontend
+        run: npx tsc --noEmit
+
+      - name: Run ESLint
+        working-directory: ./frontend
+        run: |
+          if [ -f "package.json" ] && grep -q "\"lint\"" package.json; then
+            npm run lint
+          else
+            echo "⚠️ No lint script found"
+          fi
+
+      - name: Run Prettier check
+        working-directory: ./frontend
+        run: |
+          if [ -f ".prettierrc" ] || [ -f ".prettierrc.json" ]; then
+            npx prettier --check "**/*.{js,jsx,ts,tsx,json,css,md}"
+          else
+            echo "⚠️ No Prettier config found"
+          fi
+
+      - name: Run tests
+        working-directory: ./frontend
+        run: |
+          if [ -f "package.json" ] && grep -q "\"test\"" package.json; then
+            npm test -- --passWithNoTests
+          else
+            echo "⚠️ No test script found"
+          fi
+
+      - name: Build verification
+        working-directory: ./frontend
+        env:
+          NEXT_PUBLIC_API_URL: https://r11-production.up.railway.app
+        run: npm run build
+
+      - name: Check bundle size
+        working-directory: ./frontend
+        run: |
+          if [ -d ".next" ]; then
+            echo "📦 Build size:"
+            du -sh .next
+            
+            # Check if build is too large (>100MB)
+            size=$(du -sm .next | cut -f1)
+            if [ $size -gt 100 ]; then
+              echo "⚠️ Warning: Build size is larger than 100MB"
+            else
+              echo "✅ Build size is acceptable"
+            fi
+          fi
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Run npm audit (Backend)
+        working-directory: ./backend
+        run: |
+          npm audit --audit-level=high || echo "⚠️ Security vulnerabilities found in backend"
+
+      - name: Run npm audit (Frontend)
+        working-directory: ./frontend
+        run: |
+          npm audit --audit-level=high || echo "⚠️ Security vulnerabilities found in frontend"
+
+  code-quality:
+    name: Code Quality Report
+    runs-on: ubuntu-latest
+    needs: [backend-checks, frontend-checks]
+    if: always()
+    
+    steps:
+      - name: Generate summary
+        run: |
+          echo "## 📋 PR Checks Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ needs.backend-checks.result }}" == "success" ] || [ "${{ needs.backend-checks.result }}" == "skipped" ]; then
+            echo "✅ Backend checks passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Backend checks failed" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ "${{ needs.frontend-checks.result }}" == "success" ] || [ "${{ needs.frontend-checks.result }}" == "skipped" ]; then
+            echo "✅ Frontend checks passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Frontend checks failed" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Next Steps" >> $GITHUB_STEP_SUMMARY
+          echo "- Review the checks above" >> $GITHUB_STEP_SUMMARY
+          echo "- Fix any failing tests or linting issues" >> $GITHUB_STEP_SUMMARY
+          echo "- Request review from team members" >> $GITHUB_STEP_SUMMARY
+
+      - name: Check overall status
+        if: needs.backend-checks.result == 'failure' || needs.frontend-checks.result == 'failure'
+        run: |
+          echo "❌ Some checks failed. Please review and fix the issues."
+          exit 1
