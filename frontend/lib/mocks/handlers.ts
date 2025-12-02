@@ -5,26 +5,26 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 export const handlers = [
   // Auth endpoints
   http.post(`${API_URL}/api/auth/register`, async ({ request }) => {
-    const body = await request.json();
+    const body = await request.json() as any;
     
     return HttpResponse.json({
       user: {
         id: '123e4567-e89b-12d3-a456-426614174000',
-        email: body.email,
-        name: body.name,
+        email: body?.email || '',
+        name: body?.name || '',
       },
       accessToken: 'mock-access-token',
     }, { status: 201 });
   }),
 
   http.post(`${API_URL}/api/auth/login`, async ({ request }) => {
-    const body = await request.json();
+    const body = await request.json() as any;
     
-    if (body.email === 'test@example.com' && body.password === 'password123') {
+    if (body?.email === 'test@example.com' && body?.password === 'password123') {
       return HttpResponse.json({
         user: {
           id: '123e4567-e89b-12d3-a456-426614174000',
-          email: body.email,
+          email: body?.email || '',
           name: 'Test User',
         },
         accessToken: 'mock-access-token',
@@ -90,11 +90,11 @@ export const handlers = [
   }),
 
   http.post(`${API_URL}/api/campaigns`, async ({ request }) => {
-    const body = await request.json();
+    const body = await request.json() as any;
     
     return HttpResponse.json({
       id: '123e4567-e89b-12d3-a456-426614174003',
-      ...body,
+      ...(body || {}),
       currentAmount: 0,
       status: 'active',
       createdAt: new Date().toISOString(),
@@ -103,11 +103,11 @@ export const handlers = [
 
   // Investments endpoints
   http.post(`${API_URL}/api/investments`, async ({ request }) => {
-    const body = await request.json();
+    const body = await request.json() as any;
     
     return HttpResponse.json({
       id: '123e4567-e89b-12d3-a456-426614174020',
-      ...body,
+      ...(body || {}),
       status: 'completed',
       createdAt: new Date().toISOString(),
     }, { status: 201 });
