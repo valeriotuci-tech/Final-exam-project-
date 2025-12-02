@@ -1,24 +1,24 @@
 import { Router } from "express";
 import { body, param } from "express-validator";
 import {
-  createRestaurantController,
-  getRestaurantsController,
-  getRestaurantByIdController,
-  updateRestaurantController,
-  deleteRestaurantController
+  createRestaurant,
+  getAllRestaurants,
+  getRestaurantById,
+  updateRestaurant,
+  deleteRestaurant
 } from "../controllers/restaurants.controller";
 import { authenticate } from "../middleware/auth.middleware";
 import { validateRequest } from "../utils/validation.utils";
 
 export const restaurantsRouter = Router();
 
-restaurantsRouter.get("/", getRestaurantsController);
+restaurantsRouter.get("/", getAllRestaurants);
 
 restaurantsRouter.get(
   "/:id",
   [param("id").isUUID()],
-  validateRequest,
-  getRestaurantByIdController
+  validateRequest([]),
+  getRestaurantById
 );
 
 restaurantsRouter.post(
@@ -31,22 +31,22 @@ restaurantsRouter.post(
     body("cuisineType").optional().isString(),
     body("imageUrl").optional().isURL()
   ],
-  validateRequest,
-  createRestaurantController
+  validateRequest([]),
+  createRestaurant
 );
 
 restaurantsRouter.put(
   "/:id",
   authenticate,
   [param("id").isUUID()],
-  validateRequest,
-  updateRestaurantController
+  validateRequest([]),
+  updateRestaurant
 );
 
 restaurantsRouter.delete(
   "/:id",
   authenticate,
   [param("id").isUUID()],
-  validateRequest,
-  deleteRestaurantController
+  validateRequest([]),
+  deleteRestaurant
 );

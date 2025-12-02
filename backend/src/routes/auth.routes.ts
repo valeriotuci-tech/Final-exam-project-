@@ -1,10 +1,11 @@
 import { Router } from "express";
 import { body } from "express-validator";
 import {
-  registerController,
-  loginController,
-  logoutController,
-  refreshTokenController
+  register,
+  login,
+  refreshToken,
+  getProfile,
+  updateProfile
 } from "../controllers/auth.controller";
 import { validateRequest } from "../utils/validation.utils";
 
@@ -17,17 +18,15 @@ authRouter.post(
     body("password").isLength({ min: 8 }),
     body("name").isString().notEmpty()
   ],
-  validateRequest,
-  registerController
+  validateRequest([]),
+  register
 );
 
 authRouter.post(
   "/login",
   [body("email").isEmail(), body("password").isString().notEmpty()],
-  validateRequest,
-  loginController
+  validateRequest([]),
+  login
 );
 
-authRouter.post("/logout", logoutController);
-
-authRouter.post("/refresh", refreshTokenController);
+authRouter.post("/refresh", refreshToken);

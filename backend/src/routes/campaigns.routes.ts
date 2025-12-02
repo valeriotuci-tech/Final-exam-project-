@@ -1,24 +1,24 @@
 import { Router } from "express";
 import { body, param } from "express-validator";
 import {
-  createCampaignController,
-  getCampaignsController,
-  getCampaignByIdController,
-  updateCampaignController,
-  deleteCampaignController
+  createCampaign,
+  getAllCampaigns,
+  getCampaignById,
+  updateCampaign,
+  deleteCampaign
 } from "../controllers/campaigns.controller";
 import { validateRequest } from "../utils/validation.utils";
 import { authenticate } from "../middleware/auth.middleware";
 
 export const campaignsRouter = Router();
 
-campaignsRouter.get("/", getCampaignsController);
+campaignsRouter.get("/", getAllCampaigns);
 
 campaignsRouter.get(
   "/:id",
   [param("id").isUUID()],
-  validateRequest,
-  getCampaignByIdController
+  validateRequest([]),
+  getCampaignById
 );
 
 campaignsRouter.post(
@@ -31,22 +31,22 @@ campaignsRouter.post(
     body("startDate").isISO8601(),
     body("endDate").isISO8601()
   ],
-  validateRequest,
-  createCampaignController
+  validateRequest([]),
+  createCampaign
 );
 
 campaignsRouter.put(
   "/:id",
   authenticate,
   [param("id").isUUID()],
-  validateRequest,
-  updateCampaignController
+  validateRequest([]),
+  updateCampaign
 );
 
 campaignsRouter.delete(
   "/:id",
   authenticate,
   [param("id").isUUID()],
-  validateRequest,
-  deleteCampaignController
+  validateRequest([]),
+  deleteCampaign
 );

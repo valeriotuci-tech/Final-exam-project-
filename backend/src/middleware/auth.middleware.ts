@@ -15,7 +15,7 @@ export function authenticate(req: AuthRequest, res: Response, next: NextFunction
 
   try {
     const payload = verifyAccessToken(token);
-    req.user = { id: payload.sub, role: payload.role };
+    req.user = { id: payload.userId.toString(), role: payload.role || 'investor' };
     next();
   } catch (err) {
     return res.status(401).json({ message: "Invalid or expired token" });

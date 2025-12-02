@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { body } from "express-validator";
 import {
-  createInvestmentController,
-  getUserInvestmentsController
+  createInvestment,
+  getUserInvestments
 } from "../controllers/investments.controller";
 import { authenticate } from "../middleware/auth.middleware";
 import { validateRequest } from "../utils/validation.utils";
@@ -17,8 +17,8 @@ investmentsRouter.post(
     body("amount").isFloat({ gt: 0 }),
     body("rewardTier").optional().isString()
   ],
-  validateRequest,
-  createInvestmentController
+  validateRequest([]),
+  createInvestment
 );
 
-investmentsRouter.get("/me", authenticate, getUserInvestmentsController);
+investmentsRouter.get("/me", authenticate, getUserInvestments);
