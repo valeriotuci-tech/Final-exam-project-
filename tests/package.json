@@ -1,0 +1,13 @@
+{
+  "name": "tastyfund-smoke-tests",
+  "version": "1.0.0",
+  "description": "Production smoke tests for TastyFund deployment",
+  "main": "smoke-tests.js",
+  "scripts": {
+    "test": "node smoke-tests.js",
+    "test:production": "BACKEND_URL=https://r11-production.up.railway.app FRONTEND_URL=https://tasty-fund-bmm5mu53p-tanias-projects-8da0b11a.vercel.app node smoke-tests.js"
+  },
+  "keywords": ["smoke-test", "deployment", "verification"],
+  "author": "",
+  "license": "MIT"
+}
