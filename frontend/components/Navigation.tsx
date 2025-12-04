@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useAuth } from "../contexts/AuthContext";
 import { useRouter } from "next/navigation";
 
@@ -17,8 +18,17 @@ export default function Navigation() {
     <header className="mb-8 border-b border-slate-800 pb-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-6">
-          <Link href="/" className="text-2xl font-semibold tracking-tight hover:text-emerald-400">
-            TastyFund
+          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+            <Image 
+              src="/logo.png" 
+              alt="TastyFund Logo" 
+              width={48} 
+              height={48}
+              className="rounded-full"
+            />
+            <span className="text-2xl font-semibold tracking-tight text-emerald-400">
+              TastyFund
+            </span>
           </Link>
           <nav className="flex gap-4 text-sm">
             <Link href="/campaigns" className="text-slate-400 hover:text-slate-50">

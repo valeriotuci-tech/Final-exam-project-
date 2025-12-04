@@ -1,13 +1,26 @@
+import Image from "next/image";
+
 export default function HomePage() {
   return (
     <section className="space-y-6">
-      <div className="space-y-3">
-        <p className="text-sm font-medium uppercase tracking-[0.2em] text-emerald-300">
-          Welcome to
-        </p>
-        <h2 className="text-4xl font-semibold tracking-tight text-slate-50">
-          TastyFund
-        </h2>
+      <div className="space-y-4">
+        <div className="flex items-center gap-4">
+          <Image 
+            src="/logo.png" 
+            alt="TastyFund Logo" 
+            width={80} 
+            height={80}
+            className="rounded-full"
+          />
+          <div>
+            <p className="text-sm font-medium uppercase tracking-[0.2em] text-emerald-300">
+              Welcome to
+            </p>
+            <h2 className="text-4xl font-semibold tracking-tight text-slate-50">
+              TastyFund
+            </h2>
+          </div>
+        </div>
         <p className="max-w-xl text-sm text-slate-300">
           A crowdfunding platform for chefs, creators, and food lovers. Launch new
           concepts, fund pop-ups, and support the culinary projects you believe in.
