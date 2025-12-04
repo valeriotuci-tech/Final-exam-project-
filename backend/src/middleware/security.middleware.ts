@@ -79,6 +79,11 @@ export const corsOptions = {
       return callback(null, true);
     }
     
+    // Allow main production domain
+    if (origin === 'https://tasty-fund.vercel.app') {
+      return callback(null, true);
+    }
+    
     // Check environment variable for additional allowed origins
     const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || [];
     if (allowedOrigins.includes(origin)) {
