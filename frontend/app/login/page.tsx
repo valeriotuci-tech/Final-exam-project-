@@ -82,13 +82,6 @@ export default function LoginPage() {
             {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
-
-        <div className="text-center text-sm text-slate-400">
-          <p>Test credentials:</p>
-          <p className="mt-1 font-mono text-xs text-emerald-400">
-            admin@tastyfund.com / password123
-          </p>
-        </div>
       </div>
     </div>
   );

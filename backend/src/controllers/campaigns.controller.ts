@@ -59,28 +59,59 @@ export const getCampaignById = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
-    const result = await pool.query(
-      `SELECT c.*, r.name as restaurant_name, r.cuisine_type, r.location, r.description as restaurant_description,
-              COALESCE(SUM(i.amount), 0) as current_amount,
-              COUNT(DISTINCT i.id) as investor_count
+    // Get campaign with restaurant info
+    const campaignResult = await pool.query(
+      `SELECT c.*, r.name as restaurant_name, r.cuisine_type, r.location, r.description as restaurant_description
        FROM campaigns c
        LEFT JOIN restaurants r ON c.restaurant_id = r.id
-       LEFT JOIN investments i ON c.id = i.campaign_id
-       WHERE c.id = $1
-       GROUP BY c.id, r.id`,
+       WHERE c.id = $1`,
       [id]
     );
 
-    if (result.rows.length === 0) {
+    if (campaignResult.rows.length === 0) {
       return res.status(404).json({
         success: false,
         message: 'Campaign not found',
       });
     }
 
+    const campaign = campaignResult.rows[0];
+
+    // Get milestones for this campaign
+    const milestonesResult = await pool.query(
+      `SELECT milestone_id, campaign_id, milestone_name, description, target_amount_krw, status
+       FROM milestones
+       WHERE campaign_id = $1
+       ORDER BY milestone_id`,
+      [id]
+    );
+
+    // Get investment summary
+    const investmentSummary = await pool.query(
+      `SELECT 
+         COALESCE(SUM(amount_krw), 0) as total_invested,
+         COUNT(DISTINCT investor_user_id) as backer_count
+       FROM investments
+       WHERE campaign_id = $1`,
+      [id]
+    );
+
     res.json({
       success: true,
-      data: result.rows[0],
+      data: {
+        campaign: campaign,
+        restaurant: {
+          name: campaign.restaurant_name,
+          cuisine_type: campaign.cuisine_type,
+          location: campaign.location,
+          description: campaign.restaurant_description
+        },
+        milestones: milestonesResult.rows,
+        investmentSummary: {
+          totalInvested: Number(investmentSummary.rows[0].total_invested),
+          backerCount: Number(investmentSummary.rows[0].backer_count)
+        }
+      },
     });
   } catch (error) {
     logger.error('Get campaign error:', error);

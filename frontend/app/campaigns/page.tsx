@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { apiClient } from "../../lib/api/client";
 
 interface Campaign {
@@ -15,6 +16,7 @@ interface Campaign {
 }
 
 export default function CampaignsPage() {
+  const router = useRouter();
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -100,6 +102,13 @@ export default function CampaignsPage() {
                     <span>of ${parseFloat(campaign.target_amount).toLocaleString()}</span>
                   </div>
                 </div>
+
+                <button
+                  onClick={() => router.push(`/campaigns/${campaign.id}`)}
+                  className="mt-4 w-full rounded-lg bg-emerald-500/10 px-4 py-2 text-sm font-medium text-emerald-400 ring-1 ring-emerald-500/40 hover:bg-emerald-500/20 transition-colors"
+                >
+                  View Details →
+                </button>
               </div>
             );
           })}
