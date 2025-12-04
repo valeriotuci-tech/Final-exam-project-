@@ -87,12 +87,6 @@ export default function RestaurantsPage() {
           ))}
         </div>
       )}
-
-      <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 text-sm">
-        <p className="text-amber-400">
-          ✅ Loaded {restaurants.length} restaurants from Railway PostgreSQL database
-        </p>
-      </div>
     </div>
   );
 }
