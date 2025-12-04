@@ -47,8 +47,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const logout = useCallback(async () => {
-    await api.logout();
-    setUser(null);
+    try {
+      await api.logout();
+    } catch (error) {
+      // Even if logout fails on backend, clear local state
+      console.error('Logout error:', error);
+    } finally {
+      // Always clear user state
+      setUser(null);
+      // Clear any stored tokens
+      if (typeof window !== 'undefined') {
+        localStorage.clear();
+        sessionStorage.clear();
+      }
+    }
   }, []);
 
   // Try to restore session on mount via refresh token cookie

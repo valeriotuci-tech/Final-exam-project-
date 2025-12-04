@@ -215,6 +215,139 @@ export default function CampaignDetailPage() {
           </div>
         </div>
       )}
+
+      {/* Investment Tiers */}
+      <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-6">
+        <h2 className="mb-4 text-xl font-semibold">Investment Options</h2>
+        <p className="mb-4 text-sm text-slate-400">
+          Choose an amount to invest in this campaign. Each tier helps fund specific milestones.
+        </p>
+        <div className="grid gap-4 md:grid-cols-3">
+          {/* Tier 1 - Small Investment */}
+          <div className="rounded-lg border border-slate-700 bg-slate-900/40 p-4 hover:border-emerald-500/50 transition-colors">
+            <div className="mb-2 flex items-center justify-between">
+              <h3 className="font-semibold">Starter</h3>
+              <span className="rounded-full bg-blue-500/10 px-2 py-1 text-xs font-medium text-blue-300 ring-1 ring-blue-500/40">
+                Popular
+              </span>
+            </div>
+            <div className="mb-3">
+              <span className="text-2xl font-bold text-emerald-400">₩50,000</span>
+            </div>
+            <ul className="space-y-2 text-sm text-slate-400">
+              <li className="flex items-start gap-2">
+                <span className="text-emerald-400">✓</span>
+                <span>Support initial operations</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-emerald-400">✓</span>
+                <span>Backer recognition</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-emerald-400">✓</span>
+                <span>Campaign updates</span>
+              </li>
+            </ul>
+            <button className="mt-4 w-full rounded-lg bg-emerald-500/10 px-4 py-2 text-sm font-medium text-emerald-400 ring-1 ring-emerald-500/40 hover:bg-emerald-500/20 transition-colors">
+              Invest ₩50,000
+            </button>
+          </div>
+
+          {/* Tier 2 - Medium Investment */}
+          <div className="rounded-lg border-2 border-emerald-500/50 bg-slate-900/60 p-4 relative">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-emerald-500 px-3 py-1 text-xs font-bold text-white">
+              RECOMMENDED
+            </div>
+            <div className="mb-2 flex items-center justify-between">
+              <h3 className="font-semibold">Supporter</h3>
+            </div>
+            <div className="mb-3">
+              <span className="text-2xl font-bold text-emerald-400">₩100,000</span>
+            </div>
+            <ul className="space-y-2 text-sm text-slate-400">
+              <li className="flex items-start gap-2">
+                <span className="text-emerald-400">✓</span>
+                <span>All Starter benefits</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-emerald-400">✓</span>
+                <span>Help fund milestone goals</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-emerald-400">✓</span>
+                <span>Priority campaign updates</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-emerald-400">✓</span>
+                <span>Special thank you mention</span>
+              </li>
+            </ul>
+            <button className="mt-4 w-full rounded-lg bg-emerald-500 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-600 transition-colors">
+              Invest ₩100,000
+            </button>
+          </div>
+
+          {/* Tier 3 - Large Investment */}
+          <div className="rounded-lg border border-slate-700 bg-slate-900/40 p-4 hover:border-emerald-500/50 transition-colors">
+            <div className="mb-2 flex items-center justify-between">
+              <h3 className="font-semibold">Champion</h3>
+              <span className="rounded-full bg-amber-500/10 px-2 py-1 text-xs font-medium text-amber-300 ring-1 ring-amber-500/40">
+                Premium
+              </span>
+            </div>
+            <div className="mb-3">
+              <span className="text-2xl font-bold text-emerald-400">₩500,000</span>
+            </div>
+            <ul className="space-y-2 text-sm text-slate-400">
+              <li className="flex items-start gap-2">
+                <span className="text-emerald-400">✓</span>
+                <span>All Supporter benefits</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-emerald-400">✓</span>
+                <span>Major milestone contributor</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-emerald-400">✓</span>
+                <span>Exclusive backer perks</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-emerald-400">✓</span>
+                <span>Direct restaurant contact</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-emerald-400">✓</span>
+                <span>VIP recognition</span>
+              </li>
+            </ul>
+            <button className="mt-4 w-full rounded-lg bg-emerald-500/10 px-4 py-2 text-sm font-medium text-emerald-400 ring-1 ring-emerald-500/40 hover:bg-emerald-500/20 transition-colors">
+              Invest ₩500,000
+            </button>
+          </div>
+        </div>
+
+        {/* Custom Amount */}
+        <div className="mt-6 rounded-lg border border-slate-700 bg-slate-900/40 p-4">
+          <h3 className="mb-2 font-semibold">Custom Amount</h3>
+          <p className="mb-3 text-sm text-slate-400">
+            Want to invest a different amount? Enter your custom investment below.
+          </p>
+          <div className="flex gap-3">
+            <div className="flex-1">
+              <input
+                type="number"
+                placeholder="Enter amount in ₩"
+                className="w-full rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+                min="10000"
+                step="10000"
+              />
+            </div>
+            <button className="rounded-lg bg-emerald-500/10 px-6 py-2 text-sm font-medium text-emerald-400 ring-1 ring-emerald-500/40 hover:bg-emerald-500/20 transition-colors">
+              Invest
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
