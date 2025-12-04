@@ -34,6 +34,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const handleAuthResponse = (res: AuthResponse) => {
     setUser(res.data.user);
+    // Store tokens if provided
+    if (res.data.accessToken && typeof window !== 'undefined') {
+      localStorage.setItem('accessToken', res.data.accessToken);
+    }
+    if (res.data.refreshToken && typeof window !== 'undefined') {
+      localStorage.setItem('refreshToken', res.data.refreshToken);
+    }
   };
 
   const login = useCallback(async (email: string, password: string) => {
@@ -63,16 +70,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  // Try to restore session on mount via refresh token cookie
+  // Try to restore session on mount from localStorage
   useEffect(() => {
     let cancelled = false;
     (async () => {
       try {
-        const res = await api.refresh();
-        if (!cancelled) {
-          handleAuthResponse(res);
+        if (typeof window !== 'undefined') {
+          const accessToken = localStorage.getItem('accessToken');
+          const refreshToken = localStorage.getItem('refreshToken');
+          
+          if (accessToken && refreshToken) {
+            // Try to refresh the session
+            try {
+              const res = await api.refresh();
+              if (!cancelled) {
+                handleAuthResponse(res);
+              }
+            } catch (error) {
+              // If refresh fails, clear tokens
+              localStorage.removeItem('accessToken');
+              localStorage.removeItem('refreshToken');
+              if (!cancelled) setUser(null);
+            }
+          } else {
+            if (!cancelled) setUser(null);
+          }
         }
-      } catch {
+      } catch (error) {
         if (!cancelled) setUser(null);
       } finally {
         if (!cancelled) setLoading(false);

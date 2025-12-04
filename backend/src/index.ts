@@ -26,6 +26,8 @@ import { errorHandler } from "./middleware/error.middleware";
 const app = express();
 const port = process.env.PORT || 4000;
 
+// Version: 1.0.1
+
 // Initialize Sentry for error tracking
 initializeSentry(app);
 
