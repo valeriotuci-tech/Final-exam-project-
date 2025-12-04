@@ -77,7 +77,7 @@ export default function CampaignsPage() {
               >
                 <div className="mb-3 flex items-start justify-between">
                   <h3 className="font-semibold">{campaign.title}</h3>
-                  <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-300 ring-1 ring-emerald-500/40">
+                  <span className="rounded-full bg-amber-500/10 px-2 py-0.5 text-xs font-medium text-amber-300 ring-1 ring-amber-500/40">
                     {campaign.status}
                   </span>
                 </div>
@@ -93,7 +93,7 @@ export default function CampaignsPage() {
                   </div>
                   <div className="h-2 overflow-hidden rounded-full bg-slate-800">
                     <div
-                      className="h-full bg-emerald-500"
+                      className="h-full bg-amber-500"
                       style={{ width: `${Math.min(progress, 100)}%` }}
                     />
                   </div>
@@ -105,7 +105,7 @@ export default function CampaignsPage() {
 
                 <button
                   onClick={() => router.push(`/campaigns/${campaign.id}`)}
-                  className="mt-4 w-full rounded-lg bg-emerald-500/10 px-4 py-2 text-sm font-medium text-emerald-400 ring-1 ring-emerald-500/40 hover:bg-emerald-500/20 transition-colors"
+                  className="mt-4 w-full rounded-lg bg-amber-500/10 px-4 py-2 text-sm font-medium text-amber-400 ring-1 ring-amber-500/40 hover:bg-amber-500/20 transition-colors"
                 >
                   View Details →
                 </button>
@@ -115,8 +115,8 @@ export default function CampaignsPage() {
         </div>
       )}
 
-      <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4 text-sm">
-        <p className="text-emerald-400">
+      <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 text-sm">
+        <p className="text-amber-400">
           ✅ Loaded {campaigns.length} campaigns from Railway PostgreSQL database
         </p>
       </div>

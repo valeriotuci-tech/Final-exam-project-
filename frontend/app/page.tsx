@@ -13,7 +13,7 @@ export default function HomePage() {
             className="rounded-full"
           />
           <div>
-            <p className="text-sm font-medium uppercase tracking-[0.2em] text-emerald-300">
+            <p className="text-sm font-medium uppercase tracking-[0.2em] text-amber-400">
               Welcome to
             </p>
             <h2 className="text-4xl font-semibold tracking-tight text-slate-50">

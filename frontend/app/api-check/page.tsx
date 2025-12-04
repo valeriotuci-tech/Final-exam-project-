@@ -58,7 +58,7 @@ export default function ApiCheckPage() {
           )}
 
           {info.apiBaseUrl?.includes('railway.app') && (
-            <div className="mt-4 rounded-lg bg-emerald-500/10 p-4 text-emerald-400">
+            <div className="mt-4 rounded-lg bg-amber-500/10 p-4 text-amber-400">
               ✅ CORRECT: Frontend is using Railway backend!
               <br />
               API URL: {info.apiBaseUrl}

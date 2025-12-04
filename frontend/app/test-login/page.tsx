@@ -82,7 +82,7 @@ export default function TestLoginPage() {
         <button
           onClick={testLogin}
           disabled={loading}
-          className="w-full rounded-lg bg-emerald-500 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-600 disabled:opacity-50"
+          className="w-full rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-white hover:bg-amber-600 disabled:opacity-50"
         >
           {loading ? "Testing..." : "Test Login"}
         </button>
@@ -96,7 +96,7 @@ export default function TestLoginPage() {
           </pre>
 
           {result.data?.success && (
-            <div className="mt-4 rounded-lg bg-emerald-500/10 p-4 text-emerald-400">
+            <div className="mt-4 rounded-lg bg-amber-500/10 p-4 text-amber-400">
               ✅ Login Successful! Token received.
             </div>
           )}

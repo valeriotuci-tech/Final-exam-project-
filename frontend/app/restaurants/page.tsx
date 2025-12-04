@@ -71,7 +71,7 @@ export default function RestaurantsPage() {
               <div className="mb-3">
                 <h3 className="font-semibold">{restaurant.name}</h3>
                 <div className="mt-1 flex items-center gap-2 text-xs">
-                  <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 font-medium text-emerald-300 ring-1 ring-emerald-500/40">
+                  <span className="rounded-full bg-amber-500/10 px-2 py-0.5 font-medium text-amber-300 ring-1 ring-amber-500/40">
                     {restaurant.cuisine_type}
                   </span>
                   {restaurant.location && (
@@ -88,8 +88,8 @@ export default function RestaurantsPage() {
         </div>
       )}
 
-      <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4 text-sm">
-        <p className="text-emerald-400">
+      <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 text-sm">
+        <p className="text-amber-400">
           ✅ Loaded {restaurants.length} restaurants from Railway PostgreSQL database
         </p>
       </div>
