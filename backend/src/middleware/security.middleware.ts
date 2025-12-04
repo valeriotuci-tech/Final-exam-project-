@@ -63,19 +63,30 @@ export const xssProtection = (req: Request, res: Response, next: NextFunction) =
   next();
 };
 
-// CORS configuration
+// CORS configuration - Updated to accept any Vercel deployment
 export const corsOptions = {
   origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-    const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000'];
-    
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
+    // Allow localhost for development
+    if (origin.includes('localhost')) {
+      return callback(null, true);
     }
+    
+    // Allow any Vercel deployment URL for tanias-projects-8da0b11a
+    if (origin.includes('tanias-projects-8da0b11a.vercel.app')) {
+      return callback(null, true);
+    }
+    
+    // Check environment variable for additional allowed origins
+    const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || [];
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    
+    // Reject all other origins
+    callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
   optionsSuccessStatus: 200,
