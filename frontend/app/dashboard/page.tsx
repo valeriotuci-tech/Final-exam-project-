@@ -88,16 +88,6 @@ export default function DashboardPage() {
           </a>
         </div>
       </div>
-
-      <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-6">
-        <h2 className="text-lg font-semibold text-emerald-400">
-          ✅ Authentication Working!
-        </h2>
-        <p className="mt-2 text-sm text-slate-300">
-          You're successfully logged in and connected to the Railway backend.
-          Your session is being managed with JWT tokens.
-        </p>
-      </div>
     </div>
   );
 }

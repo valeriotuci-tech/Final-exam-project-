@@ -77,22 +77,23 @@ export const getCampaignById = async (req: Request, res: Response) => {
 
     const campaign = campaignResult.rows[0];
 
-    // Get milestones for this campaign
+    // Get milestones for this campaign (campaign_id is integer in milestones table)
     const milestonesResult = await pool.query(
-      `SELECT milestone_id, campaign_id, milestone_name, description, target_amount_krw, status
+      `SELECT milestone_id, campaign_id, milestone_name, description, target_amount_krw
        FROM milestones
-       WHERE campaign_id = $1
+       WHERE campaign_id = $1::integer
        ORDER BY milestone_id`,
       [id]
     );
 
-    // Get investment summary
+    // Get investment summary (using correct column names)
     const investmentSummary = await pool.query(
       `SELECT 
-         COALESCE(SUM(amount_krw), 0) as total_invested,
-         COUNT(DISTINCT investor_user_id) as backer_count
+         COALESCE(SUM(amount), 0) as total_invested,
+         COUNT(DISTINCT user_id) as backer_count
        FROM investments
-       WHERE campaign_id = $1`,
+       WHERE campaign_id = $1
+       AND status = 'completed'`,
       [id]
     );
 

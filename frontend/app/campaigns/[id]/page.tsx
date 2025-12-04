@@ -10,7 +10,7 @@ interface Milestone {
   milestone_name: string;
   description: string;
   target_amount_krw: number;
-  status: string;
+  status?: string;
 }
 
 interface CampaignDetail {
@@ -200,21 +200,9 @@ export default function CampaignDetailPage() {
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <h3 className="font-medium">{milestone.milestone_name}</h3>
-                      {milestone.status === 'completed' && (
-                        <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-300 ring-1 ring-emerald-500/40">
-                          ✓ Completed
-                        </span>
-                      )}
-                      {milestone.status === 'in_progress' && (
-                        <span className="rounded-full bg-blue-500/10 px-2 py-0.5 text-xs font-medium text-blue-300 ring-1 ring-blue-500/40">
-                          In Progress
-                        </span>
-                      )}
-                      {milestone.status === 'pending' && (
-                        <span className="rounded-full bg-slate-500/10 px-2 py-0.5 text-xs font-medium text-slate-300 ring-1 ring-slate-500/40">
-                          Pending
-                        </span>
-                      )}
+                      <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-300 ring-1 ring-emerald-500/40">
+                        Milestone
+                      </span>
                     </div>
                     <p className="mt-1 text-sm text-slate-400">{milestone.description}</p>
                     <p className="mt-2 text-xs text-slate-500">
