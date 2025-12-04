@@ -89,15 +89,22 @@ export const getCampaignById = async (req: Request, res: Response) => {
     }
 
     // Get investment summary (using correct column names)
-    const investmentSummary = await pool.query(
-      `SELECT 
-         COALESCE(SUM(amount), 0) as total_invested,
-         COUNT(DISTINCT user_id) as backer_count
-       FROM investments
-       WHERE campaign_id = $1
-       AND status = 'completed'`,
-      [id]
-    );
+    let investmentSummary;
+    try {
+      investmentSummary = await pool.query(
+        `SELECT 
+           COALESCE(SUM(amount), 0) as total_invested,
+           COUNT(DISTINCT user_id) as backer_count
+         FROM investments
+         WHERE campaign_id = $1
+         AND status = 'completed'`,
+        [id]
+      );
+    } catch (error) {
+      logger.error('Investment summary query error:', error);
+      // Return default values if query fails
+      investmentSummary = { rows: [{ total_invested: 0, backer_count: 0 }] };
+    }
 
     res.json({
       success: true,
@@ -111,8 +118,8 @@ export const getCampaignById = async (req: Request, res: Response) => {
         },
         milestones: milestonesResult.rows,
         investmentSummary: {
-          totalInvested: Number(investmentSummary.rows[0].total_invested),
-          backerCount: Number(investmentSummary.rows[0].backer_count)
+          totalInvested: Number(investmentSummary.rows[0]?.total_invested || 0),
+          backerCount: Number(investmentSummary.rows[0]?.backer_count || 0)
         }
       },
     });
