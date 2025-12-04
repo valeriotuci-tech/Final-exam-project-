@@ -10,18 +10,18 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Custom gold theme to match logo - bright yellow-gold like the logo
+        // Custom gold theme - very bright yellow-gold to match logo
         primary: {
-          50: '#fffef0',
-          100: '#fffacd',
-          200: '#fff59d',
-          300: '#ffed4e',
-          400: '#ffd700',
-          500: '#f4c430',
-          600: '#daa520',
-          700: '#b8860b',
-          800: '#8b6914',
-          900: '#6b5310',
+          50: '#fffff0',
+          100: '#fffde7',
+          200: '#fff9c4',
+          300: '#fff176',
+          400: '#ffeb3b',
+          500: '#ffd700',
+          600: '#ffc107',
+          700: '#ffb300',
+          800: '#ff8f00',
+          900: '#ff6f00',
         },
       }
     }
