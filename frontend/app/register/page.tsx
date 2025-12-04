@@ -98,7 +98,7 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-amber-600 px-4 py-2 text-sm font-medium text-white hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500/40 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-white hover:bg-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/40 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? "Creating account..." : "Create Account"}
           </button>
@@ -106,7 +106,7 @@ export default function RegisterPage() {
 
         <div className="text-center text-sm text-slate-400">
           Already have an account?{" "}
-          <Link href="/login" className="text-amber-600 hover:text-amber-600">
+          <Link href="/login" className="text-amber-500 hover:text-amber-500">
             Sign in
           </Link>
         </div>

@@ -26,7 +26,7 @@ export default function Navigation() {
               height={48}
               className="rounded-full"
             />
-            <span className="text-2xl font-semibold tracking-tight text-amber-600">
+            <span className="text-2xl font-semibold tracking-tight text-amber-500">
               TastyFund
             </span>
           </Link>
@@ -62,7 +62,7 @@ export default function Navigation() {
             <>
               <Link
                 href="/login"
-                className="rounded-lg bg-amber-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-amber-600"
+                className="rounded-lg bg-amber-500 px-4 py-1.5 text-sm font-medium text-white hover:bg-amber-500"
               >
                 Sign In
               </Link>
