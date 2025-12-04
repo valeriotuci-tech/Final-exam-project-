@@ -26,7 +26,7 @@ export const register = async (req: Request, res: Response) => {
 
     // Create user
     const result = await pool.query(
-      `INSERT INTO users (email, password, name, role, created_at, updated_at) 
+      `INSERT INTO users (email, password_hash, name, role, created_at, updated_at) 
        VALUES ($1, $2, $3, $4, NOW(), NOW()) 
        RETURNING id, email, name, role, created_at`,
       [email, hashedPassword, name, role]
@@ -77,7 +77,7 @@ export const login = async (req: Request, res: Response) => {
   try {
     // Find user
     const result = await pool.query(
-      'SELECT id, email, password, name, role FROM users WHERE email = $1',
+      'SELECT id, email, password_hash, name, role FROM users WHERE email = $1',
       [email]
     );
 
@@ -91,7 +91,7 @@ export const login = async (req: Request, res: Response) => {
     const user = result.rows[0];
 
     // Verify password
-    const isValidPassword = await bcrypt.compare(password, user.password);
+    const isValidPassword = await bcrypt.compare(password, user.password_hash);
 
     if (!isValidPassword) {
       return res.status(401).json({
