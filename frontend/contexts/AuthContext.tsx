@@ -33,7 +33,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   const handleAuthResponse = (res: AuthResponse) => {
-    setUser(res.user);
+    setUser(res.data.user);
   };
 
   const login = useCallback(async (email: string, password: string) => {

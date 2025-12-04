@@ -29,11 +29,16 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 
 // Auth
 export interface AuthResponse {
-  user: {
-    id: string;
-    email: string;
-    name: string;
-    role: string;
+  success: boolean;
+  data: {
+    user: {
+      id: string;
+      email: string;
+      name: string;
+      role: string;
+    };
+    accessToken?: string;
+    refreshToken?: string;
   };
 }
 
