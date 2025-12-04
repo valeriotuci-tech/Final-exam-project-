@@ -34,12 +34,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const handleAuthResponse = (res: AuthResponse) => {
     setUser(res.data.user);
-    // Store tokens if provided
-    if (res.data.accessToken && typeof window !== 'undefined') {
-      localStorage.setItem('accessToken', res.data.accessToken);
-    }
-    if (res.data.refreshToken && typeof window !== 'undefined') {
-      localStorage.setItem('refreshToken', res.data.refreshToken);
+    // Store tokens and user data if provided
+    if (typeof window !== 'undefined') {
+      if (res.data.accessToken) {
+        localStorage.setItem('accessToken', res.data.accessToken);
+      }
+      if (res.data.refreshToken) {
+        localStorage.setItem('refreshToken', res.data.refreshToken);
+      }
+      // Store user object for session persistence
+      localStorage.setItem('user', JSON.stringify(res.data.user));
     }
   };
 
@@ -77,19 +81,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         if (typeof window !== 'undefined') {
           const accessToken = localStorage.getItem('accessToken');
-          const refreshToken = localStorage.getItem('refreshToken');
+          const storedUser = localStorage.getItem('user');
           
-          if (accessToken && refreshToken) {
-            // Try to refresh the session
+          if (accessToken && storedUser) {
+            // Restore user from localStorage directly
             try {
-              const res = await api.refresh();
+              const userData = JSON.parse(storedUser);
               if (!cancelled) {
-                handleAuthResponse(res);
+                setUser(userData);
               }
             } catch (error) {
-              // If refresh fails, clear tokens
+              // If parsing fails, clear everything
+              console.error('Failed to parse stored user:', error);
               localStorage.removeItem('accessToken');
               localStorage.removeItem('refreshToken');
+              localStorage.removeItem('user');
               if (!cancelled) setUser(null);
             }
           } else {
