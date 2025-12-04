@@ -10,18 +10,18 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Custom gold theme - exact logo color #FFCB4B
+        // Custom navy blue theme - exact logo color #14254B
         primary: {
-          50: '#fffef5',
-          100: '#fffaeb',
-          200: '#fff5d6',
-          300: '#ffe9ad',
-          400: '#ffdc84',
-          500: '#FFCB4B', // Exact logo color
-          600: '#f5b800',
-          700: '#cc9900',
-          800: '#a37a00',
-          900: '#7a5c00',
+          50: '#e8eaf0',
+          100: '#d1d5e1',
+          200: '#a3abc3',
+          300: '#7581a5',
+          400: '#475787',
+          500: '#14254B', // Exact logo navy blue
+          600: '#101e3c',
+          700: '#0c162d',
+          800: '#080f1e',
+          900: '#04070f',
         },
       }
     }

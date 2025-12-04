@@ -78,7 +78,7 @@ export default function CampaignDetailPage() {
         </div>
         <button
           onClick={() => router.push("/campaigns")}
-          className="text-sm text-amber-500 hover:text-amber-500"
+          className="text-sm text-blue-200 hover:text-blue-200"
         >
           ← Back to campaigns
         </button>
@@ -93,7 +93,7 @@ export default function CampaignDetailPage() {
       {/* Back button */}
       <button
         onClick={() => router.push("/campaigns")}
-        className="text-sm text-amber-500 hover:text-amber-500"
+        className="text-sm text-blue-200 hover:text-blue-200"
       >
         ← Back to campaigns
       </button>
@@ -104,10 +104,10 @@ export default function CampaignDetailPage() {
           <div>
             <h1 className="text-3xl font-bold">{campaign.campaign.title}</h1>
             <p className="mt-2 text-sm text-slate-400">
-              by <span className="text-amber-500">{campaign.restaurant.name}</span> • {campaign.restaurant.cuisine_type} • {campaign.restaurant.location}
+              by <span className="text-blue-200">{campaign.restaurant.name}</span> • {campaign.restaurant.cuisine_type} • {campaign.restaurant.location}
             </p>
           </div>
-          <span className="rounded-full bg-amber-500/10 px-3 py-1 text-sm font-medium text-amber-500 ring-1 ring-amber-500/40">
+          <span className="rounded-full bg-blue-500/10 px-3 py-1 text-sm font-medium text-blue-200 ring-1 ring-blue-500/40">
             {campaign.campaign.status}
           </span>
         </div>
@@ -127,7 +127,7 @@ export default function CampaignDetailPage() {
           
           <div className="h-3 overflow-hidden rounded-full bg-slate-800">
             <div
-              className="h-full bg-amber-500 transition-all"
+              className="h-full bg-blue-600 transition-all"
               style={{ width: `${Math.min(progress, 100)}%` }}
             />
           </div>
@@ -135,7 +135,7 @@ export default function CampaignDetailPage() {
           <div className="grid grid-cols-2 gap-4 pt-2">
             <div className="rounded-lg bg-slate-800/50 p-4">
               <div className="text-xs text-slate-400">Total Invested</div>
-              <div className="mt-1 text-2xl font-bold text-amber-500">
+              <div className="mt-1 text-2xl font-bold text-blue-200">
                 ₩{campaign.investmentSummary.totalInvested.toLocaleString()}
               </div>
             </div>
@@ -150,7 +150,7 @@ export default function CampaignDetailPage() {
           <div className="flex items-center justify-between border-t border-slate-800 pt-4 text-sm">
             <div>
               <span className="text-slate-400">Backers: </span>
-              <span className="font-medium text-amber-500">{campaign.investmentSummary.backerCount}</span>
+              <span className="font-medium text-blue-200">{campaign.investmentSummary.backerCount}</span>
             </div>
             <div>
               <span className="text-slate-400">Campaign Period: </span>
@@ -168,7 +168,7 @@ export default function CampaignDetailPage() {
         <div className="space-y-2">
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium text-slate-400">Name:</span>
-            <span className="text-amber-500">{campaign.restaurant.name}</span>
+            <span className="text-blue-200">{campaign.restaurant.name}</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium text-slate-400">Cuisine:</span>
@@ -200,7 +200,7 @@ export default function CampaignDetailPage() {
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <h3 className="font-medium">{milestone.milestone_name}</h3>
-                      <span className="rounded-full bg-amber-500/10 px-2 py-0.5 text-xs font-medium text-amber-500 ring-1 ring-amber-500/40">
+                      <span className="rounded-full bg-blue-500/10 px-2 py-0.5 text-xs font-medium text-blue-200 ring-1 ring-blue-500/40">
                         Milestone
                       </span>
                     </div>
@@ -224,7 +224,7 @@ export default function CampaignDetailPage() {
         </p>
         <div className="grid gap-4 md:grid-cols-3">
           {/* Tier 1 - Small Investment */}
-          <div className="rounded-lg border border-slate-700 bg-slate-900/40 p-4 hover:border-amber-500/50 transition-colors">
+          <div className="rounded-lg border border-slate-700 bg-slate-900/40 p-4 hover:border-blue-500/50 transition-colors">
             <div className="mb-2 flex items-center justify-between">
               <h3 className="font-semibold">Starter</h3>
               <span className="rounded-full bg-blue-500/10 px-2 py-1 text-xs font-medium text-blue-300 ring-1 ring-blue-500/40">
@@ -232,95 +232,95 @@ export default function CampaignDetailPage() {
               </span>
             </div>
             <div className="mb-3">
-              <span className="text-2xl font-bold text-amber-500">₩50,000</span>
+              <span className="text-2xl font-bold text-blue-200">₩50,000</span>
             </div>
             <ul className="space-y-2 text-sm text-slate-400">
               <li className="flex items-start gap-2">
-                <span className="text-amber-500">✓</span>
+                <span className="text-blue-200">✓</span>
                 <span>Support initial operations</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-amber-500">✓</span>
+                <span className="text-blue-200">✓</span>
                 <span>Backer recognition</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-amber-500">✓</span>
+                <span className="text-blue-200">✓</span>
                 <span>Campaign updates</span>
               </li>
             </ul>
-            <button className="mt-4 w-full rounded-lg bg-amber-500/10 px-4 py-2 text-sm font-medium text-amber-500 ring-1 ring-amber-500/40 hover:bg-amber-500/20 transition-colors">
+            <button className="mt-4 w-full rounded-lg bg-blue-500/10 px-4 py-2 text-sm font-medium text-blue-200 ring-1 ring-blue-500/40 hover:bg-blue-500/20 transition-colors">
               Invest ₩50,000
             </button>
           </div>
 
           {/* Tier 2 - Medium Investment */}
-          <div className="rounded-lg border-2 border-amber-500/50 bg-slate-900/60 p-4 relative">
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-amber-500 px-3 py-1 text-xs font-bold text-white">
+          <div className="rounded-lg border-2 border-blue-500/50 bg-slate-900/60 p-4 relative">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-blue-600 px-3 py-1 text-xs font-bold text-white">
               RECOMMENDED
             </div>
             <div className="mb-2 flex items-center justify-between">
               <h3 className="font-semibold">Supporter</h3>
             </div>
             <div className="mb-3">
-              <span className="text-2xl font-bold text-amber-500">₩100,000</span>
+              <span className="text-2xl font-bold text-blue-200">₩100,000</span>
             </div>
             <ul className="space-y-2 text-sm text-slate-400">
               <li className="flex items-start gap-2">
-                <span className="text-amber-500">✓</span>
+                <span className="text-blue-200">✓</span>
                 <span>All Starter benefits</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-amber-500">✓</span>
+                <span className="text-blue-200">✓</span>
                 <span>Help fund milestone goals</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-amber-500">✓</span>
+                <span className="text-blue-200">✓</span>
                 <span>Priority campaign updates</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-amber-500">✓</span>
+                <span className="text-blue-200">✓</span>
                 <span>Special thank you mention</span>
               </li>
             </ul>
-            <button className="mt-4 w-full rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-white hover:bg-amber-500 transition-colors">
+            <button className="mt-4 w-full rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 transition-colors">
               Invest ₩100,000
             </button>
           </div>
 
           {/* Tier 3 - Large Investment */}
-          <div className="rounded-lg border border-slate-700 bg-slate-900/40 p-4 hover:border-amber-500/50 transition-colors">
+          <div className="rounded-lg border border-slate-700 bg-slate-900/40 p-4 hover:border-blue-500/50 transition-colors">
             <div className="mb-2 flex items-center justify-between">
               <h3 className="font-semibold">Champion</h3>
-              <span className="rounded-full bg-amber-500/10 px-2 py-1 text-xs font-medium text-amber-500 ring-1 ring-amber-500/40">
+              <span className="rounded-full bg-blue-500/10 px-2 py-1 text-xs font-medium text-blue-200 ring-1 ring-blue-500/40">
                 Premium
               </span>
             </div>
             <div className="mb-3">
-              <span className="text-2xl font-bold text-amber-500">₩500,000</span>
+              <span className="text-2xl font-bold text-blue-200">₩500,000</span>
             </div>
             <ul className="space-y-2 text-sm text-slate-400">
               <li className="flex items-start gap-2">
-                <span className="text-amber-500">✓</span>
+                <span className="text-blue-200">✓</span>
                 <span>All Supporter benefits</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-amber-500">✓</span>
+                <span className="text-blue-200">✓</span>
                 <span>Major milestone contributor</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-amber-500">✓</span>
+                <span className="text-blue-200">✓</span>
                 <span>Exclusive backer perks</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-amber-500">✓</span>
+                <span className="text-blue-200">✓</span>
                 <span>Direct restaurant contact</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-amber-500">✓</span>
+                <span className="text-blue-200">✓</span>
                 <span>VIP recognition</span>
               </li>
             </ul>
-            <button className="mt-4 w-full rounded-lg bg-amber-500/10 px-4 py-2 text-sm font-medium text-amber-500 ring-1 ring-amber-500/40 hover:bg-amber-500/20 transition-colors">
+            <button className="mt-4 w-full rounded-lg bg-blue-500/10 px-4 py-2 text-sm font-medium text-blue-200 ring-1 ring-blue-500/40 hover:bg-blue-500/20 transition-colors">
               Invest ₩500,000
             </button>
           </div>
@@ -337,12 +337,12 @@ export default function CampaignDetailPage() {
               <input
                 type="number"
                 placeholder="Enter amount in ₩"
-                className="w-full rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 text-sm focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/40"
+                className="w-full rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 text-sm focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
                 min="10000"
                 step="10000"
               />
             </div>
-            <button className="rounded-lg bg-amber-500/10 px-6 py-2 text-sm font-medium text-amber-500 ring-1 ring-amber-500/40 hover:bg-amber-500/20 transition-colors">
+            <button className="rounded-lg bg-blue-500/10 px-6 py-2 text-sm font-medium text-blue-200 ring-1 ring-blue-500/40 hover:bg-blue-500/20 transition-colors">
               Invest
             </button>
           </div>
