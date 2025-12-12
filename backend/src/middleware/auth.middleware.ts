@@ -6,8 +6,14 @@ export interface AuthRequest extends Request {
 }
 
 export function authenticate(req: AuthRequest, res: Response, next: NextFunction) {
+  // Try to get token from Authorization header first
   const authHeader = req.headers.authorization;
-  const token = authHeader?.startsWith("Bearer ") ? authHeader.substring(7) : undefined;
+  let token = authHeader?.startsWith("Bearer ") ? authHeader.substring(7) : undefined;
+
+  // If no Bearer token, try to get from cookies
+  if (!token) {
+    token = req.cookies?.accessToken;
+  }
 
   if (!token) {
     return res.status(401).json({ message: "Missing authorization token" });
