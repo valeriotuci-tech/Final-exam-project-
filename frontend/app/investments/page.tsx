@@ -34,12 +34,19 @@ export default function InvestmentsPage() {
 
     const fetchInvestments = async () => {
       try {
+        console.log("Fetching investments for user:", user);
         const response = await apiClient.get("/api/campaigns/my-investments");
+        console.log("Investments response:", response.data);
         setInvestments(response.data.data || []);
       } catch (err: any) {
-        console.error("Investment fetch error:", err);
+        console.error("Investment fetch error details:", {
+          status: err.response?.status,
+          statusText: err.response?.statusText,
+          data: err.response?.data,
+          message: err.message
+        });
         const errorMsg = err.response?.data?.message || err.message || "Failed to load investments";
-        setError(`${errorMsg}. The backend is updating, please wait 1-2 minutes and refresh.`);
+        setError(`Error ${err.response?.status || ''}: ${errorMsg}`);
       } finally {
         setLoading(false);
       }
