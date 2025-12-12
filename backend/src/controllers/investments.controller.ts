@@ -9,7 +9,7 @@ export const createInvestment = async (req: Request, res: Response) => {
   try {
     // Check if campaign exists and is active
     const campaignResult = await pool.query(
-      `SELECT id, goal_amount, min_investment, max_investment, status, end_date
+      `SELECT id, target_amount, status, end_date
        FROM campaigns WHERE id = $1`,
       [campaignId]
     );
@@ -37,18 +37,11 @@ export const createInvestment = async (req: Request, res: Response) => {
       });
     }
 
-    // Validate investment amount
-    if (amount < campaign.min_investment) {
+    // Validate investment amount (minimum 10,000 KRW)
+    if (amount < 10000) {
       return res.status(400).json({
         success: false,
-        message: `Minimum investment is ${campaign.min_investment}`,
-      });
-    }
-
-    if (amount > campaign.max_investment) {
-      return res.status(400).json({
-        success: false,
-        message: `Maximum investment is ${campaign.max_investment}`,
+        message: 'Minimum investment is ₩10,000',
       });
     }
 
@@ -59,7 +52,9 @@ export const createInvestment = async (req: Request, res: Response) => {
     );
 
     const currentTotal = parseFloat(totalResult.rows[0].total);
-    if (currentTotal + amount > campaign.goal_amount) {
+    const targetAmount = parseFloat(campaign.target_amount);
+    
+    if (currentTotal + amount > targetAmount) {
       return res.status(400).json({
         success: false,
         message: 'Investment would exceed campaign goal',
