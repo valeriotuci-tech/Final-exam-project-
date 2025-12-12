@@ -37,7 +37,9 @@ export default function InvestmentsPage() {
         const response = await apiClient.get("/api/campaigns/my-investments");
         setInvestments(response.data.data || []);
       } catch (err: any) {
-        setError(err.message || "Failed to load investments");
+        console.error("Investment fetch error:", err);
+        const errorMsg = err.response?.data?.message || err.message || "Failed to load investments";
+        setError(`${errorMsg}. The backend is updating, please wait 1-2 minutes and refresh.`);
       } finally {
         setLoading(false);
       }
