@@ -75,6 +75,14 @@ app.get("/health", async (_req, res) => {
   }
 });
 
+app.get("/version", (_req, res) => {
+  res.json({
+    version: "1.0.3",
+    features: ["user-investments-endpoint", "cookie-auth-support"],
+    timestamp: new Date().toISOString()
+  });
+});
+
 app.get("/health/ready", async (_req, res) => {
   try {
     await pool.query("SELECT 1");
