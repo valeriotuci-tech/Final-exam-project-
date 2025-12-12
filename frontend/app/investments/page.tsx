@@ -35,6 +35,7 @@ export default function InvestmentsPage() {
     const fetchInvestments = async () => {
       try {
         console.log("Fetching investments for user:", user);
+        console.log("Cookies:", document.cookie);
         const response = await apiClient.get("/api/campaigns/my-investments");
         console.log("Investments response:", response.data);
         setInvestments(response.data.data || []);
@@ -43,10 +44,17 @@ export default function InvestmentsPage() {
           status: err.response?.status,
           statusText: err.response?.statusText,
           data: err.response?.data,
-          message: err.message
+          message: err.message,
+          cookies: document.cookie
         });
         const errorMsg = err.response?.data?.message || err.message || "Failed to load investments";
-        setError(`Error ${err.response?.status || ''}: ${errorMsg}`);
+        
+        // More helpful error message
+        if (err.response?.status === 400 && err.response?.data?.message?.includes('Refresh token')) {
+          setError("Session expired. Please sign out and sign in again to continue.");
+        } else {
+          setError(`Error ${err.response?.status || ''}: ${errorMsg}`);
+        }
       } finally {
         setLoading(false);
       }
