@@ -4,7 +4,7 @@ import logger from '../config/logger';
 
 export const createInvestment = async (req: Request, res: Response) => {
   const { campaignId, amount } = req.body;
-  const userId = (req as any).user.userId;
+  const userId = (req as any).user?.id;
 
   try {
     // Check if campaign exists and is active
@@ -90,7 +90,7 @@ export const createInvestment = async (req: Request, res: Response) => {
 };
 
 export const getUserInvestments = async (req: Request, res: Response) => {
-  const userId = (req as any).user.userId;
+  const userId = (req as any).user?.id;
 
   try {
     const result = await pool.query(
@@ -119,7 +119,7 @@ export const getUserInvestments = async (req: Request, res: Response) => {
 
 export const getInvestmentById = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const userId = (req as any).user.userId;
+  const userId = (req as any).user?.id;
 
   try {
     const result = await pool.query(
@@ -189,7 +189,7 @@ export const updateInvestmentStatus = async (req: Request, res: Response) => {
 
 export const deleteInvestment = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const userId = (req as any).user.userId;
+  const userId = (req as any).user?.id;
 
   try {
     // Check if investment belongs to user and is still pending
