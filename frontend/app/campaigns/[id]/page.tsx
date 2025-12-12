@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { apiClient } from "../../../lib/api/client";
+import { useAuth } from "../../../contexts/AuthContext";
 
 interface Milestone {
   milestone_id: number;
@@ -41,9 +42,13 @@ interface CampaignDetail {
 export default function CampaignDetailPage() {
   const params = useParams();
   const router = useRouter();
+  const { user } = useAuth();
   const [campaign, setCampaign] = useState<CampaignDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [customAmount, setCustomAmount] = useState("");
+  const [investing, setInvesting] = useState(false);
+  const [investSuccess, setInvestSuccess] = useState(false);
 
   useEffect(() => {
     const fetchCampaignDetail = async () => {
@@ -61,6 +66,50 @@ export default function CampaignDetailPage() {
       fetchCampaignDetail();
     }
   }, [params.id]);
+
+  const handleInvest = async (amount: number) => {
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+
+    setInvesting(true);
+    setError("");
+    setInvestSuccess(false);
+
+    try {
+      await apiClient.post("/api/investments", {
+        campaign_id: params.id,
+        amount: amount,
+      });
+
+      setInvestSuccess(true);
+      
+      // Refresh campaign data to show updated progress
+      const response = await apiClient.get(`/api/campaigns/${params.id}`);
+      setCampaign(response.data.data);
+
+      // Show success message
+      setTimeout(() => {
+        setInvestSuccess(false);
+      }, 5000);
+
+    } catch (err: any) {
+      setError(err.response?.data?.message || err.message || "Failed to create investment");
+    } finally {
+      setInvesting(false);
+    }
+  };
+
+  const handleCustomInvest = () => {
+    const amount = parseInt(customAmount);
+    if (isNaN(amount) || amount < 10000) {
+      setError("Minimum investment is ₩10,000");
+      return;
+    }
+    handleInvest(amount);
+    setCustomAmount("");
+  };
 
   if (loading) {
     return (
@@ -90,13 +139,26 @@ export default function CampaignDetailPage() {
 
   return (
     <div className="space-y-6">
-      {/* Back button */}
       <button
-        onClick={() => router.push("/campaigns")}
-        className="text-sm text-amber-500 hover:text-amber-500"
+        onClick={() => router.back()}
+        className="text-sm text-slate-400 hover:text-slate-50"
       >
-        ← Back to campaigns
+        ← Back to Campaigns
       </button>
+
+      {/* Success Message */}
+      {investSuccess && (
+        <div className="rounded-lg bg-green-500/10 p-4 text-sm text-green-400 ring-1 ring-green-500/40">
+          ✅ Investment successful! Check "Your Investments" to see your contribution.
+        </div>
+      )}
+
+      {/* Error Message */}
+      {error && (
+        <div className="rounded-lg bg-red-500/10 p-4 text-sm text-red-400 ring-1 ring-red-500/40">
+          {error}
+        </div>
+      )}
 
       {/* Campaign Header */}
       <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-6">
@@ -248,8 +310,12 @@ export default function CampaignDetailPage() {
                 <span>Campaign updates</span>
               </li>
             </ul>
-            <button className="mt-4 w-full rounded-lg bg-amber-500/10 px-4 py-2 text-sm font-medium text-amber-500 ring-1 ring-amber-500/40 hover:bg-amber-500/20 transition-colors">
-              Invest ₩50,000
+            <button 
+              onClick={() => handleInvest(50000)}
+              disabled={investing}
+              className="mt-4 w-full rounded-lg bg-amber-500/10 px-4 py-2 text-sm font-medium text-amber-500 ring-1 ring-amber-500/40 hover:bg-amber-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {investing ? "Processing..." : "Invest ₩50,000"}
             </button>
           </div>
 
@@ -282,8 +348,12 @@ export default function CampaignDetailPage() {
                 <span>Special thank you mention</span>
               </li>
             </ul>
-            <button className="mt-4 w-full rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-white hover:bg-amber-500 transition-colors">
-              Invest ₩100,000
+            <button 
+              onClick={() => handleInvest(100000)}
+              disabled={investing}
+              className="mt-4 w-full rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-white hover:bg-amber-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {investing ? "Processing..." : "Invest ₩100,000"}
             </button>
           </div>
 
@@ -320,8 +390,12 @@ export default function CampaignDetailPage() {
                 <span>VIP recognition</span>
               </li>
             </ul>
-            <button className="mt-4 w-full rounded-lg bg-amber-500/10 px-4 py-2 text-sm font-medium text-amber-500 ring-1 ring-amber-500/40 hover:bg-amber-500/20 transition-colors">
-              Invest ₩500,000
+            <button 
+              onClick={() => handleInvest(500000)}
+              disabled={investing}
+              className="mt-4 w-full rounded-lg bg-amber-500/10 px-4 py-2 text-sm font-medium text-amber-500 ring-1 ring-amber-500/40 hover:bg-amber-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {investing ? "Processing..." : "Invest ₩500,000"}
             </button>
           </div>
         </div>
@@ -337,13 +411,19 @@ export default function CampaignDetailPage() {
               <input
                 type="number"
                 placeholder="Enter amount in ₩"
+                value={customAmount}
+                onChange={(e) => setCustomAmount(e.target.value)}
                 className="w-full rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 text-sm focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/40"
                 min="10000"
                 step="10000"
               />
             </div>
-            <button className="rounded-lg bg-amber-500/10 px-6 py-2 text-sm font-medium text-amber-500 ring-1 ring-amber-500/40 hover:bg-amber-500/20 transition-colors">
-              Invest
+            <button 
+              onClick={handleCustomInvest}
+              disabled={investing || !customAmount}
+              className="rounded-lg bg-amber-500/10 px-6 py-2 text-sm font-medium text-amber-500 ring-1 ring-amber-500/40 hover:bg-amber-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {investing ? "Processing..." : "Invest"}
             </button>
           </div>
         </div>
