@@ -63,8 +63,8 @@ export const createInvestment = async (req: Request, res: Response) => {
 
     // Create investment
     const result = await pool.query(
-      `INSERT INTO investments (user_id, campaign_id, amount, status, created_at, updated_at)
-       VALUES ($1, $2, $3, 'pending', NOW(), NOW())
+      `INSERT INTO investments (user_id, campaign_id, amount, status, created_at)
+       VALUES ($1, $2, $3, 'completed', NOW())
        RETURNING *`,
       [userId, campaignId, amount]
     );
