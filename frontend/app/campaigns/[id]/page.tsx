@@ -79,7 +79,7 @@ export default function CampaignDetailPage() {
 
     try {
       await apiClient.post("/api/investments", {
-        campaign_id: params.id,
+        campaignId: params.id,
         amount: amount,
       });
 
