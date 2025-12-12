@@ -26,7 +26,7 @@ import { errorHandler } from "./middleware/error.middleware";
 const app = express();
 const port = process.env.PORT || 4000;
 
-// Version: 1.0.2 - Added user investments endpoint
+// Version: 1.0.3 - Fixed auth middleware for cookies
 
 // Initialize Sentry for error tracking
 initializeSentry(app);
