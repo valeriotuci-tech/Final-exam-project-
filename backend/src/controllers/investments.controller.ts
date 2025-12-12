@@ -3,7 +3,7 @@ import { pool } from '../db';
 import logger from '../config/logger';
 
 export const createInvestment = async (req: Request, res: Response) => {
-  const { campaign_id, amount } = req.body;
+  const { campaignId, amount } = req.body;
   const userId = (req as any).user.userId;
 
   try {
@@ -11,7 +11,7 @@ export const createInvestment = async (req: Request, res: Response) => {
     const campaignResult = await pool.query(
       `SELECT id, goal_amount, min_investment, max_investment, status, end_date
        FROM campaigns WHERE id = $1`,
-      [campaign_id]
+      [campaignId]
     );
 
     if (campaignResult.rows.length === 0) {
@@ -55,7 +55,7 @@ export const createInvestment = async (req: Request, res: Response) => {
     // Check current total investment
     const totalResult = await pool.query(
       'SELECT COALESCE(SUM(amount), 0) as total FROM investments WHERE campaign_id = $1',
-      [campaign_id]
+      [campaignId]
     );
 
     const currentTotal = parseFloat(totalResult.rows[0].total);
@@ -71,7 +71,7 @@ export const createInvestment = async (req: Request, res: Response) => {
       `INSERT INTO investments (user_id, campaign_id, amount, status, created_at, updated_at)
        VALUES ($1, $2, $3, 'pending', NOW(), NOW())
        RETURNING *`,
-      [userId, campaign_id, amount]
+      [userId, campaignId, amount]
     );
 
     logger.info(`Investment created: ${result.rows[0].id} by user ${userId}`);

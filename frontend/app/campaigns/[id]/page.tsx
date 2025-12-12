@@ -95,6 +95,11 @@ export default function CampaignDetailPage() {
       }, 5000);
 
     } catch (err: any) {
+      console.error("Investment creation error:", {
+        status: err.response?.status,
+        data: err.response?.data,
+        message: err.message
+      });
       setError(err.response?.data?.message || err.message || "Failed to create investment");
     } finally {
       setInvesting(false);
