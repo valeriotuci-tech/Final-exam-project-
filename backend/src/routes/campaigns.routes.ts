@@ -5,7 +5,8 @@ import {
   getAllCampaigns,
   getCampaignById,
   updateCampaign,
-  deleteCampaign
+  deleteCampaign,
+  getUserInvestments
 } from "../controllers/campaigns.controller";
 import { validateRequest } from "../utils/validation.utils";
 import { authenticate } from "../middleware/auth.middleware";
@@ -13,6 +14,8 @@ import { authenticate } from "../middleware/auth.middleware";
 export const campaignsRouter = Router();
 
 campaignsRouter.get("/", getAllCampaigns);
+
+campaignsRouter.get("/my-investments", authenticate, getUserInvestments);
 
 campaignsRouter.get(
   "/:id",

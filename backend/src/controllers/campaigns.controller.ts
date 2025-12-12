@@ -297,3 +297,48 @@ export const getCampaignInvestments = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const getUserInvestments = async (req: Request, res: Response) => {
+  const userId = (req as any).user?.id;
+
+  if (!userId) {
+    return res.status(401).json({
+      success: false,
+      message: 'Unauthorized',
+    });
+  }
+
+  try {
+    const result = await pool.query(
+      `SELECT 
+        i.id,
+        i.amount,
+        i.status,
+        i.created_at,
+        c.id as campaign_id,
+        c.title as campaign_title,
+        c.description as campaign_description,
+        c.status as campaign_status,
+        r.name as restaurant_name,
+        r.cuisine_type,
+        r.location
+       FROM investments i
+       JOIN campaigns c ON i.campaign_id = c.id
+       LEFT JOIN restaurants r ON c.restaurant_id = r.id
+       WHERE i.user_id = $1
+       ORDER BY i.created_at DESC`,
+      [userId]
+    );
+
+    res.json({
+      success: true,
+      data: result.rows,
+    });
+  } catch (error) {
+    logger.error('Get user investments error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching user investments',
+    });
+  }
+};

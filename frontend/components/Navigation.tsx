@@ -37,6 +37,11 @@ export default function Navigation() {
             <Link href="/restaurants" className="text-slate-400 hover:text-slate-50">
               Restaurants
             </Link>
+            {user && (
+              <Link href="/investments" className="text-slate-400 hover:text-slate-50">
+                Your Investments
+              </Link>
+            )}
           </nav>
         </div>
 
