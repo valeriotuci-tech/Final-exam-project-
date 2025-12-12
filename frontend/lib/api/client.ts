@@ -29,6 +29,14 @@ function flushRefreshQueue() {
 }
 
 apiClient.interceptors.request.use((config) => {
+  // Add access token from localStorage if available
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem('accessToken');
+    if (token && config.headers) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+  }
+  
   if (isDev) {
     // Lightweight logging in dev
     console.log(`[API] ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`);
