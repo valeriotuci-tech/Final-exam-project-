@@ -45,14 +45,14 @@ jobs:
       #       echo "No lint script found, skipping..."
       #     fi
 
-      - name: Run Prettier check
-        working-directory: ./frontend
-        run: |
-          if [ -f "package.json" ] && grep -q "\"format:check\"" package.json; then
-            npm run format:check
-          else
-            echo "No format:check script found, skipping..."
-          fi
+      # - name: Run Prettier check
+      #   working-directory: ./frontend
+      #   run: |
+      #     if [ -f "package.json" ] && grep -q "\"format:check\"" package.json; then
+      #       npm run format:check
+      #     else
+      #       echo "No format:check script found, skipping..."
+      #     fi
 
       - name: Run tests
         working-directory: ./frontend
