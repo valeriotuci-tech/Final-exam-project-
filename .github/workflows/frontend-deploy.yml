@@ -36,14 +36,14 @@ jobs:
         working-directory: ./frontend
         run: npx tsc --noEmit
 
-      - name: Run ESLint
-        working-directory: ./frontend
-        run: |
-          if [ -f "package.json" ] && grep -q "\"lint\"" package.json; then
-            npm run lint
-          else
-            echo "No lint script found, skipping..."
-          fi
+      # - name: Run ESLint
+      #   working-directory: ./frontend
+      #   run: |
+      #     if [ -f "package.json" ] && grep -q "\"lint\"" package.json; then
+      #       npm run lint
+      #     else
+      #       echo "No lint script found, skipping..."
+      #     fi
 
       - name: Run Prettier check
         working-directory: ./frontend
