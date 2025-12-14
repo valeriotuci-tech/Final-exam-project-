@@ -12,6 +12,11 @@ export interface Campaign {
   status: string;
   cuisineType?: string;
   location?: string;
+  expectedReturn?: {
+    annualReturnPercent: number;
+    monthlyEffectiveRate: number;
+    riskCategory: 'low' | 'medium' | 'high';
+  };
 }
 
 export interface CampaignFilters {

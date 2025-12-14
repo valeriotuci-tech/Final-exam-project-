@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { apiClient } from "../../../lib/api/client";
 import { useAuth } from "../../../contexts/AuthContext";
+import { calculateCampaignReturn } from "../../../lib/utils/financialReturns";
 
 interface Milestone {
   milestone_id: number;
@@ -141,6 +142,10 @@ export default function CampaignDetailPage() {
   }
 
   const progress = (campaign.investmentSummary.totalInvested / campaign.campaign.target_amount) * 100;
+  const campaignReturn = calculateCampaignReturn(
+    campaign.campaign.target_amount,
+    campaign.investmentSummary.totalInvested
+  );
 
   return (
     <div className="space-y-6">
@@ -180,6 +185,62 @@ export default function CampaignDetailPage() {
         </div>
 
         <p className="text-slate-300">{campaign.campaign.description}</p>
+      </div>
+
+      {/* Expected Return Section */}
+      <div className="rounded-xl border border-green-500/30 bg-gradient-to-br from-green-500/10 to-emerald-500/5 p-6">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-2">
+              <h2 className="text-xl font-semibold text-green-400">Expected Investment Return</h2>
+              <button 
+                className="group relative inline-flex h-5 w-5 items-center justify-center rounded-full bg-slate-700/50 text-xs text-slate-400 hover:bg-slate-700"
+                title="Return estimated based on campaign risk and market benchmarks"
+              >
+                <span>?</span>
+                <span className="pointer-events-none absolute bottom-full left-1/2 mb-2 hidden w-64 -translate-x-1/2 rounded-lg bg-slate-800 px-4 py-3 text-sm text-slate-300 shadow-xl ring-1 ring-slate-700 group-hover:block z-10">
+                  <strong className="block mb-1">Return Calculation</strong>
+                  Returns are estimated based on campaign size, risk profile, and South Korean market benchmarks:
+                  <ul className="mt-2 space-y-1 text-xs">
+                    <li>• SK Inflation: ~2.4%</li>
+                    <li>• Short-term bonds: ~2.83%</li>
+                    <li>• Target returns: 4-6% annual</li>
+                  </ul>
+                  <div className="mt-2 text-xs text-slate-400">
+                    Larger campaigns = lower risk = ~5% return<br/>
+                    Smaller campaigns = higher risk = ~6% return
+                  </div>
+                </span>
+              </button>
+            </div>
+            <div className="grid grid-cols-2 gap-4 mt-4">
+              <div className="rounded-lg bg-slate-900/60 p-4 ring-1 ring-green-500/20">
+                <div className="text-sm text-slate-400 mb-1">Annual Return</div>
+                <div className="text-3xl font-bold text-green-400">
+                  {campaignReturn.annualReturnPercent}%
+                </div>
+                <div className="text-xs text-green-400/70 mt-1">per year</div>
+              </div>
+              <div className="rounded-lg bg-slate-900/60 p-4 ring-1 ring-green-500/20">
+                <div className="text-sm text-slate-400 mb-1">Monthly Effective Rate</div>
+                <div className="text-3xl font-bold text-green-400">
+                  {campaignReturn.monthlyEffectiveRate}%
+                </div>
+                <div className="text-xs text-green-400/70 mt-1">per month</div>
+              </div>
+            </div>
+            <div className="mt-4 flex items-center gap-2 text-sm">
+              <span className="inline-flex items-center rounded-full bg-green-500/20 px-3 py-1 text-xs font-medium text-green-400 ring-1 ring-green-500/40">
+                {campaignReturn.riskCategory === 'low' && '🟢 Lower Risk'}
+                {campaignReturn.riskCategory === 'medium' && '🟡 Moderate Risk'}
+                {campaignReturn.riskCategory === 'high' && '🟠 Higher Risk'}
+              </span>
+              <span className="text-slate-400">
+                Risk-adjusted return based on campaign size
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Funding Progress */}

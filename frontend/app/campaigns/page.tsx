@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { apiClient } from "../../lib/api/client";
+import { calculateCampaignReturn } from "../../lib/utils/financialReturns";
 
 interface Campaign {
   id: string;
@@ -69,6 +70,10 @@ export default function CampaignsPage() {
         <div className="grid gap-4 md:grid-cols-2">
           {campaigns.map((campaign) => {
             const progress = (parseFloat(campaign.current_amount) / parseFloat(campaign.target_amount)) * 100;
+            const campaignReturn = calculateCampaignReturn(
+              parseFloat(campaign.target_amount),
+              parseFloat(campaign.current_amount)
+            );
             
             return (
               <div
@@ -86,6 +91,32 @@ export default function CampaignsPage() {
                   {campaign.description}
                 </p>
 
+                {/* Expected Return Indicator */}
+                <div className="mb-4 rounded-lg bg-green-500/10 p-3 ring-1 ring-green-500/20">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-xs font-medium text-slate-400">Expected Return:</span>
+                        <button 
+                          className="group relative inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-700/50 text-[10px] text-slate-400 hover:bg-slate-700"
+                          title="Return estimated based on campaign risk and market benchmarks"
+                        >
+                          <span>?</span>
+                          <span className="pointer-events-none absolute bottom-full left-1/2 mb-2 hidden w-48 -translate-x-1/2 rounded-lg bg-slate-800 px-3 py-2 text-xs text-slate-300 shadow-lg ring-1 ring-slate-700 group-hover:block">
+                            Return estimated based on campaign risk and market benchmarks (SK inflation ~2.4%, bonds ~2.83%)
+                          </span>
+                        </button>
+                      </div>
+                      <div className="mt-1 text-lg font-bold text-green-400">
+                        {campaignReturn.annualReturnPercent}% annual
+                      </div>
+                      <div className="text-xs text-green-400/70">
+                        ~{campaignReturn.monthlyEffectiveRate}% monthly effective rate
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-slate-400">Progress</span>
@@ -98,8 +129,8 @@ export default function CampaignsPage() {
                     />
                   </div>
                   <div className="flex justify-between text-xs text-slate-500">
-                    <span>${parseFloat(campaign.current_amount).toLocaleString()} raised</span>
-                    <span>of ${parseFloat(campaign.target_amount).toLocaleString()}</span>
+                    <span>₩{parseFloat(campaign.current_amount).toLocaleString()} raised</span>
+                    <span>of ₩{parseFloat(campaign.target_amount).toLocaleString()}</span>
                   </div>
                 </div>
 
